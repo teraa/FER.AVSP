@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace AVSP.Lab1a
+namespace AVSP.Lab1a.Test
 {
     public class UnitTest : IDisposable
     {
@@ -65,23 +65,23 @@ namespace AVSP.Lab1a
             Analyzer analyzer;
             using var fs = File.OpenRead(inputFile);
             using var sr = new StreamReader(fs);
-            var line = sr.ReadLine()!;
+            var line = sr.ReadLine();
             var count = int.Parse(line);
             var lines = ReadLines(sr, count);
 
             analyzer = new Analyzer(lines, count);
 
-            line = sr.ReadLine()!;
+            line = sr.ReadLine();
             var queryCount = int.Parse(line);
 
             Assert.Equal(results.Length, queryCount);
 
             for (int i = 0; i < queryCount; i++)
             {
-                line = sr.ReadLine()!;
+                line = sr.ReadLine();
                 var parts = line.Split(' ');
                 Assert.NotNull(parts);
-                Assert.Equal(2, parts!.Length);
+                Assert.Equal(2, parts.Length);
 
                 int targetLine = int.Parse(parts[0]);
                 int maxDistance = int.Parse(parts[1]);
