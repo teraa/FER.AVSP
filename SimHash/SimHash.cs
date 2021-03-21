@@ -49,18 +49,40 @@ namespace AVSP.Lab1a
         {
             ((IDisposable)_md5).Dispose();
         }
+    }
 
-        static byte GetDistance(BitArray a, BitArray b)
+    public static class HashUtils
+    {
+        public static int GetDistance(BitArray a, BitArray b, int size)
         {
-            byte result = 0;
+            int result = 0;
 
-            for (int i = 0; i < a.Length; i++)
-            {
+            for (int i = 0; i < size; i++)
                 if (a[i] ^ b[i])
                     result++;
-            }
 
             return result;
+        }
+
+        public static string HashToString(BitArray hash)
+        {
+            if (hash.Length % 8 != 0)
+                throw new ArgumentException("Length is not a multiple of 8");
+
+            var array = new byte[hash.Length / 8];
+            hash.CopyTo(array, 0);
+
+            return HashToString(array);
+        }
+
+        public static string HashToString(byte[] hash)
+        {
+            var sb = new StringBuilder();
+
+            for (int i = 0; i < hash.Length; i++)
+                sb.Append(hash[i].ToString("x2"));
+
+            return sb.ToString();
         }
     }
 }

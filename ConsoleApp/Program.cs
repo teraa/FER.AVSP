@@ -13,9 +13,7 @@ namespace AVSP
         {
             using var simHash = new SimHash();
             var hash = simHash.ComputeHash("fakultet elektrotehnike i racunarstva");
-            var bytes = new byte[hash.Length / 8];
-            hash.CopyTo(bytes, 0);
-            Console.WriteLine(BitConverter.ToString(bytes));
+            Console.WriteLine(HashUtils.HashToString(hash));
         }
     }
 }
