@@ -17,14 +17,15 @@ namespace AVSP.Lab1a
         {
             _hashes = new BitArray[count];
 
-            using var simHash = new SimHash();
+            using (var simHash = new SimHash())
+            {
+                int i = 0;
+                foreach (var line in lines)
+                    _hashes[i++] = simHash.ComputeHash(line);
 
-            int i = 0;
-            foreach (var line in lines)
-                _hashes[i++] = simHash.ComputeHash(line);
-
-            if (i != count)
-                throw new ArgumentException($"Missing data, expected {_hashes.Length} rows, got {i}");
+                if (i != count)
+                    throw new ArgumentException($"Missing data, expected {_hashes.Length} rows, got {i}");
+            }
         }
 
         public int GetSimilarCount(int targetLine, int maxDistance)

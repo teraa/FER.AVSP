@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,7 +14,7 @@ namespace AVSP.Lab1a
             _md5 = MD5.Create();
         }
 
-        public Encoding Encoding { get; init; } = Encoding.UTF8;
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
 
         public BitArray ComputeHash(string input)
         {
