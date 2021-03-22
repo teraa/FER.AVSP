@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 
 namespace AVSP.Lab1a
 {
@@ -7,6 +8,9 @@ namespace AVSP.Lab1a
     {
         static void Main(string[] args)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             int lineCount = int.Parse(Console.ReadLine());
             var hashes = new BitArray[lineCount];
             using (var simHash = new SimHash())
@@ -26,6 +30,9 @@ namespace AVSP.Lab1a
 
                 Console.WriteLine(count);
             }
+
+            sw.Stop();
+            Console.Error.WriteLine(sw.Elapsed);
         }
     }
 }
