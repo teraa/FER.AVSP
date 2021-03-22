@@ -40,8 +40,13 @@ namespace AVSP.Lab1b
                         tekstoviUPretincu = pretinac;
                         foreach (var id in tekstoviUPretincu)
                         {
-                            (_kandidati[i] ??= new HashSet<int>()).Add(id);
-                            (_kandidati[id] ??= new HashSet<int>()).Add(i);
+                            if (_kandidati[i] == null)
+                                _kandidati[i] = new HashSet<int>();
+                            _kandidati[i].Add(id);
+
+                            if (_kandidati[id] == null)
+                                _kandidati[id] = new HashSet<int>();
+                            _kandidati[id].Add(i);
                         }
                     }
 
