@@ -17,26 +17,25 @@ namespace AVSP.Lab2
             float prag = s * brKošara;
             int brPretinaca = int.Parse(Console.ReadLine());
 
+            int max = 0;
             int[][] košare = new int[brKošara][];
             for (int i = 0; i < brKošara; i++)
             {
-                string line = Console.ReadLine();
-                int[] košara = line.Split(' ').Select(int.Parse).ToArray();
+                string[] parts = Console.ReadLine().Split(' ');
+                int[] košara = new int[parts.Length];
+                for (int j = 0; j < parts.Length; j++)
+                {
+                    košara[j] = int.Parse(parts[j]);
+                    if (max < košara[j])
+                        max = košara[j];
+                }
                 košare[i] = košara;
             }
 
-            var brPredmetaMap = new Dictionary<int, int>();
-
-            // prvi prolaz
-            for (int i = 0; i < košare.Length; i++)
-                for (int j = 0; j < košare[i].Length; j++)
-                    if (!brPredmetaMap.TryAdd(košare[i][j], 1))
-                        brPredmetaMap[košare[i][j]]++;
-
-            // map to array
-            int[] brPredmeta = new int[brPredmetaMap.Count];
-            for (int i = 1; i <= brPredmeta.Length; i++)
-                brPredmeta[i - 1] = brPredmetaMap[i];
+            int[] brPredmeta = new int[max];
+            foreach (var košara in košare)
+                foreach (var predmet in košara)
+                    brPredmeta[predmet - 1]++;
 
             // drugi prolaz - sažimanje
             int[] pretinci = new int[brPretinaca];
@@ -94,10 +93,8 @@ namespace AVSP.Lab2
 
             int a = m * (m - 1) / 2;
 
-            int p = parovi.Count;
-
             Console.WriteLine(a);
-            Console.WriteLine(p);
+            Console.WriteLine(parovi.Count);
             foreach (var x in parovi.Values.OrderByDescending(v => v))
                 Console.WriteLine(x);
 
