@@ -32,6 +32,7 @@ namespace AVSP.Lab2
                 košare[i] = košara;
             }
 
+            // predmeti su brojevi [1, max], spremljeni u polje s indeksima [0, max-1]
             int[] brPredmeta = new int[max];
             foreach (var košara in košare)
                 foreach (var predmet in košara)
