@@ -21,15 +21,32 @@ namespace AVSP.Lab2
             int[][] košare = new int[brKošara][];
             for (int i = 0; i < brKošara; i++)
             {
-                string[] parts = Console.ReadLine().Split(' ');
-                int[] košara = new int[parts.Length];
-                for (int j = 0; j < parts.Length; j++)
+                ReadOnlySpan<char> input = Console.ReadLine();
+
+                var košara = new List<int>();
+                int idx;
+                do
                 {
-                    košara[j] = int.Parse(parts[j]);
-                    if (max < košara[j])
-                        max = košara[j];
-                }
-                košare[i] = košara;
+                    idx = input.IndexOf(' ');
+                    int predmet;
+                    if (idx == -1)
+                    {
+                        predmet = int.Parse(input);
+                        input = default(ReadOnlySpan<char>);
+                    }
+                    else
+                    {
+                        predmet = int.Parse(input.Slice(0, idx));
+                        input = input.Slice(idx + 1);
+                    }
+
+                    košara.Add(predmet);
+
+                    if (max < predmet)
+                        max = predmet;
+                } while (input.Length > 0);
+
+                košare[i] = košara.ToArray();
             }
 
             // predmeti su brojevi [1, max], spremljeni u polje s indeksima [0, max-1]
