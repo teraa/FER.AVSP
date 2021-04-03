@@ -34,12 +34,9 @@ namespace AVSP.Lab2
                         brPredmetaMap[košare[i][j]]++;
 
             // map to array
-            // int[] brPredmeta = new int[brPredmetaMap.Count];
-            // for (int i = 1; i <= brPredmeta.Length; i++)
-            //     brPredmeta[i - 1] = brPredmetaMap[i];
-
-            // for (int i = 0; i < brPredmeta.Length; i++)
-            //     Console.WriteLine($"{i}: {brPredmeta[i]}");
+            int[] brPredmeta = new int[brPredmetaMap.Count];
+            for (int i = 1; i <= brPredmeta.Length; i++)
+                brPredmeta[i - 1] = brPredmetaMap[i];
 
             // drugi prolaz - sažimanje
             int[] pretinci = new int[brPretinaca];
@@ -48,15 +45,15 @@ namespace AVSP.Lab2
             {
                 for (int i = 0; i < košara.Length - 1; i++)
                 {
-                    int pi = košara[i];
+                    int pi = košara[i] - 1;
 
                     for (int j = i + 1; j < košara.Length; j++)
                     {
-                        int pj = košara[j];
+                        int pj = košara[j] - 1;
 
-                        if (brPredmetaMap[pi] >= prag && brPredmetaMap[pj] >= prag)
+                        if (brPredmeta[pi] >= prag && brPredmeta[pj] >= prag)
                         {
-                            int k = ((pi * brPredmetaMap.Count) + pj) % brPretinaca;
+                            int k = ((pi * brPredmeta.Length) + pj) % brPretinaca;
                             pretinci[k]++;
                         }
                     }
@@ -70,15 +67,15 @@ namespace AVSP.Lab2
             {
                 for (int i = 0; i < košara.Length - 1; i++)
                 {
-                    int pi = košara[i];
+                    int pi = košara[i] - 1;
 
                     for (int j = i + 1; j < košara.Length; j++)
                     {
-                        int pj = košara[j];
+                        int pj = košara[j] - 1;
 
-                        if (brPredmetaMap[pi] >= prag && brPredmetaMap[pj] >= prag)
+                        if (brPredmeta[pi] >= prag && brPredmeta[pj] >= prag)
                         {
-                            int k = ((pi * brPredmetaMap.Count) + pj) % brPretinaca;
+                            int k = ((pi * brPredmeta.Length) + pj) % brPretinaca;
                             if (pretinci[k] >= prag)
                             {
                                 var tuple = (pi, pj);
@@ -91,8 +88,8 @@ namespace AVSP.Lab2
             }
 
             int m = 0;
-            foreach (var count in brPredmetaMap.Values)
-                if (count >= prag)
+            for (int i = 0; i < brPredmeta.Length; i++)
+                if (brPredmeta[i] >= prag)
                     m++;
 
             int a = m * (m - 1) / 2;
