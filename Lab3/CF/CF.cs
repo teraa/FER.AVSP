@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace AVSP.Lab3
 {
@@ -70,6 +72,12 @@ namespace AVSP.Lab3
                 int j = queryParts[1] - 1; // [1, M] - 1, user
                 int t = queryParts[2]; // {0, 1}, algorithm type, 0 = item-item, 1 = user-user
                 int k = queryParts[3]; // [1, min(N,M)]
+
+                if (t == 1)
+                    matrix = Transpose(matrix);
+
+                double result = Math.Round(Query(matrix, i, j, k), 3, MidpointRounding.AwayFromZero);
+                Console.WriteLine(result.ToString("F3"));
             }
 
             sw.Stop();
@@ -80,12 +88,99 @@ namespace AVSP.Lab3
         {
             int rows = input.GetLength(0);
             int cols = input.GetLength(1);
-            var result = new T[cols, rows];
+            T[,] result = new T[cols, rows];
             for (int x = 0; x < rows; x++)
                 for (int y = 0; y < cols; y++)
                     result[y, x] = input[x, y];
 
             return result;
+        }
+
+        static float Query(int[,] inputMatrix, int i, int j, int k) // TODO: rename inputMatrix to matrix
+        {
+            float[,] matrix = Normalize(inputMatrix);
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
+
+            // float[] sims = new float[rows];
+            Dictionary<int, float> similarities = new Dictionary<int, float>();
+
+            for (int x = 0; x < rows; x++)
+            {
+                if (x == i) continue;
+
+                float[] rowA = new float[cols];
+                float[] rowB = new float[cols];
+
+                Buffer.BlockCopy(matrix, i * cols * sizeof(float), rowA, 0, cols * sizeof(float));
+                Buffer.BlockCopy(matrix, x * cols * sizeof(float), rowB, 0, cols * sizeof(float));
+
+                similarities[x] = SimCosine(rowA, rowB);
+            }
+
+            int count = 0;
+            float sumA = 0;
+            float sumB = 0;
+
+            foreach (var (row, similarity) in similarities.OrderByDescending(x => x.Value))
+            {
+                var elem = inputMatrix[row, j];
+                if (elem != 0 && similarity >= 0)
+                {
+                    sumA += similarity * elem;
+                    sumB += similarity;
+
+                    count++;
+                    if (count == k) break;
+                }
+            }
+
+            return sumA / sumB;
+        }
+
+        static float[,] Normalize(int[,] input)
+        {
+            int rows = input.GetLength(0);
+            int cols = input.GetLength(1);
+            float[,] result = new float[rows, cols];
+
+            for (int x = 0; x < rows; x++)
+            {
+                int sum = 0;
+                int count = 0;
+
+                for (int y = 0; y < cols; y++)
+                {
+                    if (input[x, y] != 0)
+                    {
+                        sum += input[x, y];
+                        count++;
+                    }
+                }
+
+                float avg = (float)sum / count;
+
+                for (int y = 0; y < cols; y++)
+                    if (input[x, y] != 0)
+                        result[x, y] = input[x, y] - avg;
+            }
+
+            return result;
+        }
+
+        static float DotProduct(float[] a, float[] b)
+        {
+            float result = 0;
+
+            for (int i = 0; i < a.Length; i++)
+                result += a[i] * b[i];
+
+            return result;
+        }
+
+        static float SimCosine(float[] a, float[] b)
+        {
+            return DotProduct(a, b) / (float)(Math.Sqrt(DotProduct(a, a) * DotProduct(b, b)));
         }
     }
 }
