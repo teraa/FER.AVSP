@@ -75,5 +75,17 @@ namespace AVSP.Lab3
             sw.Stop();
             Console.Error.WriteLine(sw.Elapsed);
         }
+
+        static T[,] Transpose<T>(T[,] input)
+        {
+            int rows = input.GetLength(0);
+            int cols = input.GetLength(1);
+            var result = new T[cols, rows];
+            for (int x = 0; x < rows; x++)
+                for (int y = 0; y < cols; y++)
+                    result[y, x] = input[x, y];
+
+            return result;
+        }
     }
 }
