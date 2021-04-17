@@ -122,8 +122,11 @@ namespace AVSP.Lab3
             float sumA = 0;
             float sumB = 0;
 
-            foreach (var (row, similarity) in similarities.OrderByDescending(x => x.Value))
+            foreach (var pair in similarities.OrderByDescending(x => x.Value))
             {
+                int row = pair.Key;
+                float similarity = pair.Value;
+
                 var elem = inputMatrix[row, j];
                 if (elem != 0 && similarity >= 0)
                 {
