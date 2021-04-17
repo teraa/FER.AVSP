@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 
 namespace AVSP.Lab3
 {
@@ -94,25 +93,25 @@ namespace AVSP.Lab3
             return result;
         }
 
-        static float Query(int[,] inputMatrix, int i, int j, int t, int k) // TODO: rename inputMatrix to matrix
+        static float Query(int[,] matrix, int i, int j, int t, int k)
         {
             if (t == 1)
             {
-                inputMatrix = Transpose(inputMatrix);
+                matrix = Transpose(matrix);
                 (i, j) = (j, i);
             }
 
-            float[][] matrix = Normalize(inputMatrix);
+            float[][] normalizedMatrix = Normalize(matrix);
 
 
-            int rows = inputMatrix.GetLength(0);
-            int cols = inputMatrix.GetLength(1);
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
 
             Dictionary<int, float> similarities = new Dictionary<int, float>();
 
             for (int x = 0; x < rows; x++)
                 if (x != i)
-                    similarities[x] = SimCosine(matrix[i], matrix[x]);
+                    similarities[x] = SimCosine(normalizedMatrix[i], normalizedMatrix[x]);
 
             int count = 0;
             float sumA = 0;
@@ -123,7 +122,7 @@ namespace AVSP.Lab3
                 int row = pair.Key;
                 float similarity = pair.Value;
 
-                var elem = inputMatrix[row, j];
+                var elem = matrix[row, j];
                 if (elem != 0 && similarity >= 0)
                 {
                     sumA += similarity * elem;
