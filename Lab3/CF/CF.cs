@@ -18,10 +18,9 @@ namespace AVSP.Lab3
             int m = int.Parse(span.Slice(idx + 1)); // <= 100, cols
 
             // read n x m matrix
-            int[][] matrix = new int[n][];
+            int[,] matrix = new int[n, m];
             for (int x = 0; x < n; x++)
             {
-                matrix[x] = new int[m];
                 span = Console.ReadLine();
                 for (int y = 0; y < m; y++)
                 {
@@ -39,7 +38,7 @@ namespace AVSP.Lab3
                     }
 
                     if (part.Length != 1 || part[0] != 'X')
-                        matrix[x][y] = int.Parse(part);
+                        matrix[x, y] = int.Parse(part);
                 }
             }
 
