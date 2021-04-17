@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace AVSP.Lab3
 {
@@ -73,12 +74,7 @@ namespace AVSP.Lab3
                 int t = queryParts[2]; // {0, 1}, algorithm type, 0 = item-item, 1 = user-user
                 int k = queryParts[3]; // [1, min(N,M)]
 
-                if (t == 1)
-                    matrix = Transpose(matrix);
-
-                float[][] normalizedMatrix = Normalize(matrix);
-
-                double result = Math.Round(Query(matrix, normalizedMatrix, i, j, k), 3, MidpointRounding.AwayFromZero);
+                double result = Math.Round(Query(matrix, i, j, t, k), 3, MidpointRounding.AwayFromZero);
                 Console.WriteLine(result.ToString("F3"));
             }
 
@@ -98,8 +94,17 @@ namespace AVSP.Lab3
             return result;
         }
 
-        static float Query(int[,] inputMatrix, float[][] matrix, int i, int j, int k) // TODO: rename inputMatrix to matrix
+        static float Query(int[,] inputMatrix, int i, int j, int t, int k) // TODO: rename inputMatrix to matrix
         {
+            if (t == 1)
+            {
+                inputMatrix = Transpose(inputMatrix);
+                (i, j) = (j, i);
+            }
+
+            float[][] matrix = Normalize(inputMatrix);
+
+
             int rows = inputMatrix.GetLength(0);
             int cols = inputMatrix.GetLength(1);
 
