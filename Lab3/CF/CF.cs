@@ -66,8 +66,8 @@ namespace AVSP.Lab3
                     queryParts[y] = int.Parse(part);
                 }
 
-                int i = queryParts[0]; // [1, N], item
-                int j = queryParts[1]; // [1, M], user
+                int i = queryParts[0] - 1; // [1, N] - 1, item
+                int j = queryParts[1] - 1; // [1, M] - 1, user
                 int t = queryParts[2]; // {0, 1}, algorithm type, 0 = item-item, 1 = user-user
                 int k = queryParts[3]; // [1, min(N,M)]
             }
