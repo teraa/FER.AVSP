@@ -76,7 +76,9 @@ namespace AVSP.Lab3
                 if (t == 1)
                     matrix = Transpose(matrix);
 
-                double result = Math.Round(Query(matrix, i, j, k), 3, MidpointRounding.AwayFromZero);
+                float[][] normalizedMatrix = Normalize(matrix);
+
+                double result = Math.Round(Query(matrix, normalizedMatrix, i, j, k), 3, MidpointRounding.AwayFromZero);
                 Console.WriteLine(result.ToString("F3"));
             }
 
@@ -96,27 +98,16 @@ namespace AVSP.Lab3
             return result;
         }
 
-        static float Query(int[,] inputMatrix, int i, int j, int k) // TODO: rename inputMatrix to matrix
+        static float Query(int[,] inputMatrix, float[][] matrix, int i, int j, int k) // TODO: rename inputMatrix to matrix
         {
-            float[,] matrix = Normalize(inputMatrix);
-            int rows = matrix.GetLength(0);
-            int cols = matrix.GetLength(1);
+            int rows = inputMatrix.GetLength(0);
+            int cols = inputMatrix.GetLength(1);
 
-            // float[] sims = new float[rows];
             Dictionary<int, float> similarities = new Dictionary<int, float>();
 
             for (int x = 0; x < rows; x++)
-            {
-                if (x == i) continue;
-
-                float[] rowA = new float[cols];
-                float[] rowB = new float[cols];
-
-                Buffer.BlockCopy(matrix, i * cols * sizeof(float), rowA, 0, cols * sizeof(float));
-                Buffer.BlockCopy(matrix, x * cols * sizeof(float), rowB, 0, cols * sizeof(float));
-
-                similarities[x] = SimCosine(rowA, rowB);
-            }
+                if (x != i)
+                    similarities[x] = SimCosine(matrix[i], matrix[x]);
 
             int count = 0;
             float sumA = 0;
@@ -141,14 +132,16 @@ namespace AVSP.Lab3
             return sumA / sumB;
         }
 
-        static float[,] Normalize(int[,] input)
+        static float[][] Normalize(int[,] input)
         {
             int rows = input.GetLength(0);
             int cols = input.GetLength(1);
-            float[,] result = new float[rows, cols];
+            float[][] result = new float[rows][];
 
             for (int x = 0; x < rows; x++)
             {
+                result[x] = new float[cols];
+
                 int sum = 0;
                 int count = 0;
 
@@ -165,7 +158,7 @@ namespace AVSP.Lab3
 
                 for (int y = 0; y < cols; y++)
                     if (input[x, y] != 0)
-                        result[x, y] = input[x, y] - avg;
+                        result[x][y] = input[x, y] - avg;
             }
 
             return result;
