@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Lab2/PCY/bin/Debug/net5.0/PCY.dll",
-            "args": ["<", "../../test/lab2_primjer/test/R.in"],
-            "cwd": "${workspaceFolder}/Lab2/PCY",
+            "program": "${workspaceFolder}/Lab3/CF/bin/Debug/net5.0/CF.dll",
+            "args": [ "<", "examples/test_pdf/R.in" ],
+            "cwd": "${workspaceFolder}/Lab3/CF",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "externalTerminal",
             "stopAtEntry": false
