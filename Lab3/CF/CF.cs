@@ -20,7 +20,7 @@ namespace AVSP.Lab3
             int m = int.Parse(span.Slice(idx + 1)); // <= 100, cols
 
             // read n x m matrix
-            int[,] matrix = new int[n, m];
+            int[,] matrixA = new int[n, m];
             for (int x = 0; x < n; x++)
             {
                 span = Console.ReadLine();
@@ -40,9 +40,13 @@ namespace AVSP.Lab3
                     }
 
                     if (part.Length != 1 || part[0] != 'X')
-                        matrix[x, y] = int.Parse(part);
+                        matrixA[x, y] = int.Parse(part);
                 }
             }
+
+            int[,] matrixB = Transpose(matrixA);
+            float[][] nMatrixA = Normalize(matrixA);
+            float[][] nMatrixB = Normalize(matrixB);
 
             int q = int.Parse(Console.ReadLine()); // [1, 100], number of queries
 
@@ -73,7 +77,22 @@ namespace AVSP.Lab3
                 int t = queryParts[2]; // {0, 1}, algorithm type, 0 = item-item, 1 = user-user
                 int k = queryParts[3]; // [1, min(N,M)]
 
-                double result = Math.Round(Query(matrix, i, j, t, k), 3, MidpointRounding.AwayFromZero);
+                int[,] mat;
+                float[][] nMat;
+
+                if (t == 1)
+                {
+                    mat = matrixB;
+                    nMat = nMatrixB;
+                    (i, j) = (j, i);
+                }
+                else
+                {
+                    mat = matrixA;
+                    nMat = nMatrixA;
+                }
+
+                double result = Math.Round(Query(mat, nMat, i, j, k), 3, MidpointRounding.AwayFromZero);
                 Console.WriteLine(result.ToString("F3"));
             }
 
@@ -93,23 +112,11 @@ namespace AVSP.Lab3
             return result;
         }
 
-        static float Query(int[,] matrix, int i, int j, int t, int k)
+        static float Query(int[,] matrix, float[][] normalizedMatrix, int i, int j, int k)
         {
-            if (t == 1)
-            {
-                matrix = Transpose(matrix);
-                (i, j) = (j, i);
-            }
-
-            float[][] normalizedMatrix = Normalize(matrix);
-
-
-            int rows = matrix.GetLength(0);
-            int cols = matrix.GetLength(1);
-
             Dictionary<int, float> similarities = new Dictionary<int, float>();
 
-            for (int x = 0; x < rows; x++)
+            for (int x = 0; x < normalizedMatrix.Length; x++)
                 if (x != i)
                     similarities[x] = SimCosine(normalizedMatrix[i], normalizedMatrix[x]);
 
